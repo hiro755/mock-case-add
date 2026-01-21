@@ -39,4 +39,21 @@ URL
 ER図
 <img width="1920" height="1080" alt="スクリーンショット 2025-10-27 172547" src="https://github.com/user-attachments/assets/881b79e7-8946-4716-87ff-733a8f7549af" />
 
+Pro入会テスト　機能要件の追加
+1.mypage.blade.phpに取引中の商品タグ及び評価（★）の追加
+2.cd mock-case/src/resources/viewsにmkdir chatで作成後、show.blade.php（チャット画面）を実装
+3.show.blade.php（チャット画面）で評価用のモーダル実装
+
+ユーザーのダミーデータ
+・出品者１→email:eller1@example.com
+          passward:Pass1234!
+
+・出品者２→email:eller2@example.com
+          passward:Pass1234!
+
+・未出品者→email:freeuser@example.com
+          passward:Pass4567!
+
+
+
 　
