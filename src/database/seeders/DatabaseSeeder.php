@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
         UserSeeder::class,
         CategorySeeder::class,
         ProductSeeder::class,
+        MessageSeeder::class,
+        ChatMessageSeeder::class,
+        DummyDataSeeder::class,
         ]);
     }
 }

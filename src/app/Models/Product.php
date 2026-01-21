@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\User;
+use App\Models\Message;
 
 class Product extends Model
 {
@@ -44,5 +45,10 @@ class Product extends Model
     public function getIsSoldAttribute()
     {
         return !is_null($this->buyer_id);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
     }
 }

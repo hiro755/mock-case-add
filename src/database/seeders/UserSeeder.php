@@ -10,12 +10,22 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        User::factory()->count(10)->create();
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'あか',
+                'email_verified_at' => now(),
+                'password' => Hash::make('pass1234'),
+            ]
+        );
 
-        User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => Hash::make('password'),
-        ]);
+        User::firstOrCreate(
+            ['email' => 'seller@example.com'],
+            [
+                'name' => '取引相手',
+                'email_verified_at' => now(),
+                'password' => Hash::make('pass5678'),
+            ]
+        );
     }
 }

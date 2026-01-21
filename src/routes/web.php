@@ -17,6 +17,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileSetupController;
+use App\Http\Controllers\ChatController;
 
 Auth::routes(['verify' => true]);
 
@@ -37,20 +38,17 @@ Route::get('/item/{id}', [ProductController::class, 'show'])->name('item.show');
 Route::get('/products', [ProductController::class, 'index'])->name('products.all');
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/mylist', [ProductController::class, 'myList'])->name('mylist');
-});
-
-Route::middleware('auth')->group(function () {
 
     Route::post('/products/{id}/like', [LikeController::class, 'toggle'])->name('like.toggle');
     Route::post('/comment/{id}', [CommentController::class, 'store'])->name('comment.store');
 
+    Route::get('/mypage', [ProductController::class, 'myProducts'])->name('mypage');
     Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/mypage/profile', [ProfileController::class, 'update'])->name('profile.update');
-
-    Route::get('/mypage', [ProductController::class, 'myProducts'])->name('mypage');
 
     Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'address'])->name('purchase.address');
     Route::post('/purchase/{item_id}', [PurchaseController::class, 'store'])->name('purchase.store');
@@ -73,6 +71,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/address/store', [AddressController::class, 'store'])->name('address.store');
     Route::get('/address/{id}/edit', [AddressController::class, 'edit'])->name('address.edit');
     Route::put('/address/update/{id}', [AddressController::class, 'update'])->name('address.update');
+
+    Route::get('/chat/{product}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/{product}', [ChatController::class, 'store'])->name('chat.store');
+    Route::match(['get', 'post'], '/chat/{product}/complete', [ChatController::class, 'complete'])->name('chat.complete');
+    Route::post('/chat/{product}/rate', [ChatController::class, 'rate'])->name('chat.rate');
+
+    Route::get('/chat/{product}/edit/{message}', [ChatController::class, 'edit'])->name('chat.edit');
+    Route::put('/chat/{product}/update/{message}', [ChatController::class, 'update'])->name('chat.update');
+    Route::delete('/chat/{product}/destroy/{message}', [ChatController::class, 'destroy'])->name('chat.destroy');
 });
 
 Route::get('/email/verify', function () {
@@ -86,7 +93,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
-    return back()->with('status','verification-link-sent');
+    return back()->with('status', 'verification-link-sent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware(['auth', 'verified'])->group(function () {

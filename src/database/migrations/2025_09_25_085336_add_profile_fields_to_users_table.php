@@ -14,11 +14,21 @@ class AddProfileFieldsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('full_name')->nullable();
-            $table->string('postal_code')->nullable();
-            $table->string('address')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->string('profile_image')->nullable();
+            if (!Schema::hasColumn('users', 'full_name')) {
+                $table->string('full_name')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'postal_code')) {
+                $table->string('postal_code')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'address')) {
+                $table->string('address')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'phone_number')) {
+                $table->string('phone_number')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'profile_image')) {
+                $table->string('profile_image')->nullable();
+            }
         });
     }
 
@@ -30,13 +40,21 @@ class AddProfileFieldsToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn([
-                'full_name',
-                'postal_code',
-                'address',
-                'phone_number',
-                'profile_image'
-            ]);
+            if (Schema::hasColumn('users', 'full_name')) {
+                $table->dropColumn('full_name');
+            }
+            if (Schema::hasColumn('users', 'postal_code')) {
+                $table->dropColumn('postal_code');
+            }
+            if (Schema::hasColumn('users', 'address')) {
+                $table->dropColumn('address');
+            }
+            if (Schema::hasColumn('users', 'phone_number')) {
+                $table->dropColumn('phone_number');
+            }
+            if (Schema::hasColumn('users', 'profile_image')) {
+                $table->dropColumn('profile_image');
+            }
         });
     }
 }

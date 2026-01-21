@@ -79,10 +79,12 @@ class ProductController extends Controller
         return redirect()->route('mypage')->with('success', '商品を出品しました。');
     }
 
+    /**
+     * マイページ
+     */
     public function myProducts()
     {
         $user = auth()->user();
-        $user->refresh();
 
         $exhibited = Product::where('user_id', $user->id)->get()->map(function ($product) {
             $product->is_sold = !is_null($product->buyer_id);
@@ -90,14 +92,32 @@ class ProductController extends Controller
         });
 
         $purchased = Product::where('buyer_id', $user->id)->get()->map(function ($product) {
-            $product->is_sold = !is_null($product->buyer_id);
+            $product->is_sold = true;
             return $product;
         });
+
+        $inProgress = Product::where(function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                ->orWhere('buyer_id', $user->id);
+            })
+            ->where('is_completed', false)
+            ->get()
+            ->map(function ($product) use ($user) {
+                $product->unread_count = $product->messages()
+                    ->where('is_read', false)
+                    ->where('user_id', '!=', $user->id)
+                    ->count();
+                return $product;
+            });
+
+        $unreadCount = $inProgress->sum('unread_count');
 
         return view('profile.mypage', [
             'user' => $user,
             'exhibited' => $exhibited,
             'purchased' => $purchased,
+            'inProgress' => $inProgress,
+            'unreadCount' => $unreadCount,
         ]);
     }
 
