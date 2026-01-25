@@ -43,6 +43,7 @@ Pro入会テスト　機能要件の追加
 1.mypage.blade.phpに取引中の商品タグ及び評価（★）の追加
 2.cd mock-case/src/resources/viewsにmkdir chatで作成後、show.blade.php（チャット画面）を実装
 3.show.blade.php（チャット画面）で評価用のモーダル実装
+4.cd mock-case/src/public/css/chat.cssを追加
 
 ユーザーのダミーデータ
 ・出品者１→email:eller1@example.com
