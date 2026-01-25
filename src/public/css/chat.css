@@ -466,3 +466,15 @@
     display: inline-flex;
     align-items: center;
 }
+
+@media (min-width: 768px) and (max-width: 850px) {
+    .container {
+        width: 65%;
+    }
+}
+
+@media (min-width: 1400px) and (max-width: 1540px) {
+    .container {
+        width: 45%;
+    }
+}
