@@ -22,7 +22,7 @@
                                 src="{{ asset('storage/' . ($product->image ?? $product->image_path)) }}"
                                 alt="商品画像"
                                 class="product-image"
-                                onerror="this.src='https://via.placeholder.com/300x300?text=No+Image';"
+                                onerror="this.onerror=null; this.src='{{ asset('images/noimage.png') }}';"
                             >
                             <p class="product-name">
                                 {{ $product->name }}

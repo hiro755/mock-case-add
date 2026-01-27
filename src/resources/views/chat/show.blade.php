@@ -16,7 +16,7 @@
                         @endif
                     </a>
                 </li>
-            @endforeachhilyou
+            @endforeach
         </ul>
     </aside>
 
@@ -103,7 +103,6 @@
             @error('image') <div class="error">{{ $message }}</div> @enderror
         </form>
 
-        {{-- モーダル（購入者・出品者） --}}
         @if (session('show_rating_modal') && !$hasRated)
             <div class="modal">
                 <div class="modal-content">
