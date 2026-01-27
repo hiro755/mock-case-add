@@ -44,6 +44,10 @@ Pro入会テスト　機能要件の追加
 2.cd mock-case/src/resources/viewsにmkdir chatで作成後、show.blade.php（チャット画面）を実装
 3.show.blade.php（チャット画面）で評価用のモーダル実装
 4.cd mock-case/src/public/css/chat.cssを追加
+5.mkdir -p storage/app/public/dummy_images作成後
+　cp -r sample_images/* storage/app/public/dummy_images/を実行
+ *php artisan storage:linkを確認
+　
 
 ユーザーのダミーデータ
 ・出品者１→email:eller1@example.com
