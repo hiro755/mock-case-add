@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.chat')
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
@@ -90,17 +90,23 @@
         <form action="{{ route('chat.store', $product->id) }}" method="POST" enctype="multipart/form-data" class="chat-form">
             @csrf
             <div class="chat-input-wrapper">
-                <textarea name="body" placeholder="取引メッセージを記入してください" maxlength="400">{{ old('body') }}</textarea>
-                <label class="image-upload">
-                    <input type="file" name="image" accept=".jpg,.jpeg,.png">
-                    画像を追加
-                </label>
+                <div class="chat-input-area">
+                    <textarea name="body" placeholder="取引メッセージを記入してください">{{ old('body') }}</textarea>
+                    @error('body') <div class="error-message">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="chat-image-area">
+                    <label class="image-upload">
+                        <input type="file" name="image" accept=".jpg,.jpeg,.png">
+                        画像を追加
+                    </label>
+                    @error('image') <div class="error-message">{{ $message }}</div> @enderror
+                </div>
+
                 <button type="submit" class="send-btn">
                     <img src="{{ asset('images/send-icon.png') }}">
                 </button>
             </div>
-            @error('body') <div class="error">{{ $message }}</div> @enderror
-            @error('image') <div class="error">{{ $message }}</div> @enderror
         </form>
 
         @if (session('show_rating_modal') && !$hasRated)
@@ -124,8 +130,34 @@
     </main>
 </div>
 
+<style>
+    .error-message {
+        color: red;
+        font-size: 0.85rem;
+        margin-top: 4px;
+    }
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.querySelector('textarea[name="body"]');
+    const productId = "{{ $product->id }}";
+    const storageKey = `chat_draft_${productId}`;
+    const hasErrors = @json($errors->has('body'));
+
+    if (!hasErrors) {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) textarea.value = saved;
+    }
+
+    textarea.addEventListener('input', () => {
+        localStorage.setItem(storageKey, textarea.value);
+    });
+
+    document.querySelector('.chat-form').addEventListener('submit', () => {
+        localStorage.removeItem(storageKey);
+    });
+
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating-value');
     let selected = 0;

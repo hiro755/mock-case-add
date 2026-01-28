@@ -21,13 +21,13 @@ class ChatController extends Controller
 
         $transactions = Product::where(function ($query) use ($user) {
             $query->where('user_id', $user->id)
-                ->orWhere('buyer_id', $user->id);
+                  ->orWhere('buyer_id', $user->id);
         })
         ->where('is_completed', false)
         ->withCount([
             'messages as unread_count' => function ($query) use ($user) {
                 $query->where('is_read', false)
-                    ->where('user_id', '!=', $user->id);
+                      ->where('user_id', '!=', $user->id);
             }
         ])
         ->orderByDesc('updated_at')

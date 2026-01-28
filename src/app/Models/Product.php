@@ -19,7 +19,12 @@ class Product extends Model
         'brand_name',
         'description',
         'img_url',
+        'image_path',       
         'condition',
+        'is_sold',          
+        'is_completed',     
+        'user_id',          
+        'buyer_id',         
     ];
 
     public function comments()
@@ -42,13 +47,18 @@ class Product extends Model
         return $this->belongsTo(User::class, 'buyer_id');
     }
 
-    public function getIsSoldAttribute()
-    {
-        return !is_null($this->buyer_id);
-    }
-
     public function messages()
     {
         return $this->hasMany(Message::class);
+    }
+
+    public function latestMessage()
+    {
+        return $this->hasOne(Message::class)->latestOfMany();
+    }
+
+    public function getIsSoldAttribute()
+    {
+        return !is_null($this->buyer_id);
     }
 }

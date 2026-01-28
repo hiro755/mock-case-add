@@ -14,7 +14,7 @@ class MessageRequest extends FormRequest
     public function rules()
     {
         return [
-            'body' => 'required|max:400',
+            'body' => ['required', 'string', 'max:400'],
             'image' => 'nullable|mimes:jpeg,jpg,png',
         ];
     }

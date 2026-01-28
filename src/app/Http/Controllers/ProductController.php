@@ -28,10 +28,10 @@ class ProductController extends Controller
             if (!empty($keyword)) {
                 $query->where(function ($q) use ($keyword) {
                     $q->where('name', 'like', "%{$keyword}%")
-                        ->orWhere('description', 'like', "%{$keyword}%")
-                        ->orWhereHas('user', function ($subQuery) use ($keyword) {
-                            $subQuery->where('name', 'like', "%{$keyword}%");
-                        });
+                      ->orWhere('description', 'like', "%{$keyword}%")
+                      ->orWhereHas('user', function ($subQuery) use ($keyword) {
+                          $subQuery->where('name', 'like', "%{$keyword}%");
+                      });
                 });
             }
 
@@ -61,13 +61,13 @@ class ProductController extends Controller
         $validated = $request->validated();
 
         $product = new Product();
-        $product->name        = $validated['name'];
-        $product->brand       = $validated['brand'] ?? null;
+        $product->name = $validated['name'];
+        $product->brand = $validated['brand'] ?? null;
         $product->description = $validated['description'] ?? null;
-        $product->condition   = $validated['condition'] ?? null;
-        $product->price       = $validated['price'];
-        $product->category    = $validated['category'];
-        $product->user_id     = auth()->id();
+        $product->condition = $validated['condition'] ?? null;
+        $product->price = $validated['price'];
+        $product->category = $validated['category'];
+        $product->user_id = auth()->id();
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
@@ -96,9 +96,10 @@ class ProductController extends Controller
             return $product;
         });
 
-        $inProgress = Product::where(function ($q) use ($user) {
+        $inProgress = Product::with('latestMessage')
+            ->where(function ($q) use ($user) {
                 $q->where('user_id', $user->id)
-                ->orWhere('buyer_id', $user->id);
+                  ->orWhere('buyer_id', $user->id);
             })
             ->where('is_completed', false)
             ->get()
@@ -107,8 +108,22 @@ class ProductController extends Controller
                     ->where('is_read', false)
                     ->where('user_id', '!=', $user->id)
                     ->count();
+
                 return $product;
-            });
+            })
+            ->sortByDesc(function ($product) {
+
+                $createdAt = $product->latestMessage?->created_at ?? now()->subYears(10);
+
+                // 🧪 デバッグログ出力（並び順確認）
+                logger()->info('[Sort]', [
+                    'product' => $product->name,
+                    'latest_message_time' => $createdAt,
+                ]);
+
+                return $createdAt;
+            })
+            ->values();
 
         $unreadCount = $inProgress->sum('unread_count');
 
