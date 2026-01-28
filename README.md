@@ -50,6 +50,8 @@ Pro入会テスト　機能要件の追加
  *php artisan storage:linkを確認
 6.show.blade.php修正→取引画面に無事移行
 7.ダミーデータについて、出品者と購入者が実際に取引を行っている状態をSeederで再現しました。
+8.src/resources/views/layoutsにchat.blade.phpを追加
+
 　
 
 ユーザーのダミーデータ
